@@ -1,0 +1,25 @@
+{
+    "name": "assurmoi",
+    "version": "1.0.0",
+    "description": "",
+    "homepage": "https://github.com/AmbinintsoaErika/sdv-renforcement-backend#readme",
+    "bugs": {
+        "url": "https://github.com/AmbinintsoaErika/sdv-renforcement-backend/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AmbinintsoaErika/sdv-renforcement-backend.git"
+    },
+    "license": "ISC",
+    "author": "Malalatiana Andriafalimanana",
+    "type": "commonjs",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon app.js"
+    },
+    "dependencies": {
+        "dotenv": "^17.3.1",
+        "express": "^5.2.1"
+    }
+}
