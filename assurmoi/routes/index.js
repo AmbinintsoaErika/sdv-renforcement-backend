@@ -3,7 +3,7 @@ const userRouter = require('./users');
 function initRoutes(app) {
     app.use('/user/', userRouter);
     
-    app.use('/', (req, res, next) => {
+    app.get('/', (req, res, next) => {
         // middleware
         console.log('middleware 1 homepage')
         next();
