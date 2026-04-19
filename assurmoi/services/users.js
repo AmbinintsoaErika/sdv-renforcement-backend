@@ -1,5 +1,8 @@
 const { Op } = require('sequelize');
 const { User, dbInstance } = require('../models')
+const bcrypt = require('bcrypt');
+
+require('dotenv').config();
 
 const getAllUsers = async (req, res) => {
     let queryParam = {};
@@ -20,7 +23,7 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
     const id = req.params.id;
-    // const user = await User.findByPk(id);
+
     const user = await User.findOne({
         where: { id }
     })
@@ -33,12 +36,13 @@ const createUser = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
         const { username, firstname, lastname, email, password } = req.body
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
         const user = await User.create({
             username,
             firstname,
             lastname,
             email,
-            password
+            password : hashedPassword
         }, { transaction })
 
         transaction.commit();
@@ -59,7 +63,7 @@ const updateUser = async (req, res) => {
     try {
         const { username, firstname, lastname, email, password } = req.body
         const user_id = req.params.id
-        // meilleur manière de mettre à jour :
+
         const user = await User.update({
             username,
             firstname,
@@ -70,17 +74,6 @@ const updateUser = async (req, res) => {
             where: { id: user_id },
             transaction
         })
-
-        // autre option :
-        // const user = await User.findOne({
-        //     where: { id: user_id }
-        // }, { transaction })
-        // user.firstname = firstname
-        // user.username = username
-        // user.lastname = lastname
-        // user.email = email
-        // user.password = password
-        // await user.save()
 
         transaction.commit();
         return res.status(200).json({

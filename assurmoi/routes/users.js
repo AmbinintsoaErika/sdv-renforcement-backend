@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { validateUsername } = require('../middlewares/users');
-const { getAllusers, createUser, getUser, updateUser, deleteUser } = require('../services/users');
+
+const { getAllUsers, createUser, getUser, updateUser, deleteUser } = require('../services/users');
 
 
-router.post('/', validateUsername, createUser);
+router.post('/', validateUsername, createUser)
 
 router.get('/:id', getUser);
 
-router.get('/', getAllusers);
+router.get('/', getAllUsers);
 
 router.delete('/:id', deleteUser);
 

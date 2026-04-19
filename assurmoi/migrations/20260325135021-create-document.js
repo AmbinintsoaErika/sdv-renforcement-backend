@@ -5,46 +5,32 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
-            await queryInterface.createTable('User', {
+            await queryInterface.createTable('Document', {
                 id: {
                     allowNull: false,
                     autoIncrement: true,
                     primaryKey: true,
                     type: Sequelize.INTEGER
                 },
-                nom: {
+                titre: {
                     type: Sequelize.STRING,
                     allowNull: true
                 },
-                prenom: {
+                type: {
                     type: Sequelize.STRING,
+                    enum: [
+                        "Attestation d'assurance",
+                        'Carte grise',
+                        "Pièce d'identité",
+                        'Rib',
+                        'Facture',
+                        'Autre'
+                    ],
                     allowNull: true
                 },
-                role: {
-                    type: Sequelize.STRING,
-                    enum: ['SUPER_ADMIN', 'GESTIONNAIRE', 'SUIVI', 'CLIENT'],
-                    required: true
-                },
-                email: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                    unique: true
-                },
-                password: {
+                chemin: {
                     type: Sequelize.STRING,
                     allowNull: false
-                },
-                token: {
-                    type: Sequelize.TEXT,
-                    allowNull: true
-                },
-                refresh_token: {
-                    type: Sequelize.TEXT,
-                    allowNull: true
-                },
-                estActif: {
-                    type: Sequelize.BOOLEAN,
-                    defaultValue: true
                 }
             }, { transaction });
             await transaction.commit();
@@ -57,10 +43,16 @@ module.exports = {
     async down (queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction()
         try {
-            await queryInterface.dropTable('User', { transaction })
-            transaction.commit()
+          await queryInterface.removeColumn('User', 'attestationAssurance', { transaction })
+          await queryInterface.removeColumn('User', 'carteGrise', { transaction })
+          await queryInterface.removeColumn('User', 'cin', { transaction })
+          await queryInterface.removeColumn('Contrat', 'rib', { transaction })
+          await queryInterface.removeColumn('Expertise', 'rapportExpert', { transaction })
+          await queryInterface.removeColumn('Facture', 'document', { transaction })
+          await queryInterface.dropTable('Document', { transaction })
+          transaction.commit()
         } catch(err) {
-            transaction.rollback()
+          transaction.rollback()
         }
     }
 };
