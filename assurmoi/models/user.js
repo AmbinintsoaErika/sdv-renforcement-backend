@@ -15,11 +15,11 @@ const User = (dbInstance, DataTypes) => {
 
     User.init(
         {
-            nom: {
+            lastname: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            prenom: {
+            firstname: {
                 type: DataTypes.STRING,
                 allowNull: true
             },

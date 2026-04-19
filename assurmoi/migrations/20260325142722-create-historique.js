@@ -15,12 +15,17 @@ module.exports = {
                 sinistre_id: {
                   type: Sequelize.INTEGER,
                   allowNull: false,
-                  references: { model: 'Dossier', key: 'id' },
+                  references: { model: 'Sinistre', key: 'id' },
                 },
                 dossier_id: {
                   type: Sequelize.INTEGER,
                   allowNull: true,
                   references: { model: 'Dossier', key: 'id' },
+                },
+                user_id: {
+                  type: Sequelize.INTEGER,
+                  allowNull: true,
+                  references: { model: 'User', key: 'id' },
                 },
                 detail: {
                   type: Sequelize.STRING,

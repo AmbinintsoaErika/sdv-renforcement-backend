@@ -21,7 +21,7 @@ const Historique = (dbInstance, DataTypes) => {
                 allowNull: true,
                 references: { model: 'Dossier', key: 'id' }
             },
-            details: {
+            detail: {
                 type: DataTypes.TEXT,
                 allowNull: true
             },

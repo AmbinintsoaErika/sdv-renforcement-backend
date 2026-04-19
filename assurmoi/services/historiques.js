@@ -20,7 +20,7 @@ const getHistorique = async (req, res) => {
 const createHistorique = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { sinistre_id, dossier_id, details, user_id, dateModification } = req.body
+        const { sinistre_id, dossier_id, detail, user_id, dateModification } = req.body
         const existDossier = await Dossier.findOne({ id: dossier_id })
         const existSinistre = await Sinistre.findOne({ id: sinistre_id })
 
@@ -34,7 +34,7 @@ const createHistorique = async (req, res) => {
         const historique = await Historique.create({
             sinistre_id,
             dossier_id,
-            details,
+            detail,
             user_id,
             dateModification
         }, { transaction })
@@ -53,7 +53,7 @@ const createHistorique = async (req, res) => {
 const updateHistorique = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { sinistre_id, dossier_id, details, user_id, dateModification } = req.body
+        const { sinistre_id, dossier_id, detail, user_id, dateModification } = req.body
         const existDossier = await Dossier.findOne({ id: dossier_id })
         const existSinistre = await Sinistre.findOne({ id: sinistre_id })
 
@@ -69,7 +69,7 @@ const updateHistorique = async (req, res) => {
         const historique = await Historique.update({
             sinistre_id,
             dossier_id,
-            details,
+            detail,
             user_id,
             dateModification
         }, {

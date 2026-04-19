@@ -20,11 +20,11 @@ const getContrat = async (req, res) => {
 const createContrat = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { numero_contrat, user_id, immatriculation_vehicule, rib } = req.body
+        const { numeroContrat, user_id, immatriculationVehicule, rib } = req.body
         const contrat = await Contrat.create({
-            numero_contrat,
+            numeroContrat,
             user_id,
-            immatriculation_vehicule,
+            immatriculationVehicule,
             rib
         }, { transaction })
 
@@ -44,13 +44,13 @@ const createContrat = async (req, res) => {
 const updateContrat = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { numero_contrat, user_id, immatriculation_vehicule, rib } = req.body
+        const { numeroContrat, user_id, immatriculationVehicule, rib } = req.body
         const contrat_id = req.params.id
 
         const contrat = await Contrat.update({
-            numero_contrat,
+            numeroContrat,
             user_id,
-            immatriculation_vehicule,
+            immatriculationVehicule,
             rib
         }, {
             where: { id: contrat_id },

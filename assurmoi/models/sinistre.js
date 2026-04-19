@@ -36,15 +36,6 @@ const Sinistre = (dbInstance, DataTypes) => {
                 type: DataTypes.TEXT,
                 allowNull: true
             },
-            responsabiliteAssuree: {
-                type: DataTypes.BOOLEAN,
-                defaultValue: false
-            },
-            pourcentageResponsabilite: {
-                type: DataTypes.INTEGER,
-                allowNull: true,
-                validate: { isIn: [[0, 50, 100]] }
-            },
             attestationAssurance: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

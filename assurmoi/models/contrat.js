@@ -11,7 +11,7 @@ const Contrat = (dbInstance, DataTypes) => {
 
     Contrat.init(
         {
-            numero_contrat: {
+            numeroContrat: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 unique: true
@@ -21,7 +21,7 @@ const Contrat = (dbInstance, DataTypes) => {
                 allowNull: false,
                 references: { model: 'User', key: 'id' }
             },
-            immatriculation_vehicule: {
+            immatriculationVehicule: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
