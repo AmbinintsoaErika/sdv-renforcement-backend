@@ -1,9 +1,11 @@
+const {mail, mailLogin} = require('../utils/mailer')
 const { User } = require("../models")
 const bcrypt = require('bcrypt')
 
 const jwt = require('jsonwebtoken')
 
 require('dotenv').config()
+
 
 const login = async (req, res) => {
     try {
@@ -22,6 +24,10 @@ const login = async (req, res) => {
 
         user.token = token
         user.save()
+
+       
+        const mailStatus = await mailLogin(user);
+        if(!mailStatus) console.log("Login notification not sent");
 
         return res.status(200).json({
             token
