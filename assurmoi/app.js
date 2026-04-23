@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     credentials: true,
-    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000']
+    origin: '*',
 }));
 
 app.use('/uploads', express.static(path.join(__dirname, uploadDir)));
