@@ -20,17 +20,22 @@ export default function LoginScreen() {
 
     const login = async () => {
         try {
-            const { token } = await fetchData("/auth/login",'POST', { email, password }, false)
-            
-            await AsyncStorage.setItem("token", token);
+          if(!email || !password) {
+            setError("Veuillez remplir tous les champs !");
+            return;
+          }
 
-            const { user } = jwtDecode<JwtPayload>(token);
-            setUser(user);
+          const { token } = await fetchData("/auth/login",'POST', { email, password }, false)
+          
+          await AsyncStorage.setItem("token", token);
 
-            router.push({ pathname: '/' });
+          const { user } = jwtDecode<JwtPayload>(token);
+          setUser(user);
+
+          router.push({ pathname: '/' });
         } catch(err: any) {
-            console.log("Login error : ", err);
-            setError(err.message);
+          console.log("Login error : ", err);
+          setError(err.message);
         }
     }
 
@@ -45,6 +50,7 @@ export default function LoginScreen() {
             value={email}
             onChangeText={setEmail}
             style={styles.input}
+            
           />
           <TextInput
             label="Mot de passe"
@@ -94,6 +100,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#FFFFFF',
+    color: '#6200EE',
   },
 });

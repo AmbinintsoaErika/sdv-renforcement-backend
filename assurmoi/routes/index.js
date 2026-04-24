@@ -16,7 +16,7 @@ function initRoutes(app) {
     app.use('/auth', authRouter);
     app.use('/users', userRouter);
     app.use('/sinistres', sinistreRouter);
-    app.use('/contrat', contratRouter);
+    app.use('/contrats', contratRouter);
     app.use('/dossiers', dossierRouter);
     app.use('/expertises', expertiseRouter);
     app.use('/interventions', interventionRouter);

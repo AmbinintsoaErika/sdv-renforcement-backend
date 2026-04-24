@@ -10,8 +10,8 @@ const API_BASE_URL_CONST = 'http://localhost:3000';
 
 export default async function fetchData(path: string, method: string, body?: object, useToken?: boolean) {
     const token = await AsyncStorage.getItem('token');
-    console.log('API BASE URL', API_BASE_URL_CONST);
-    console.log('API base URL 2', process.env)
+    // console.log('API BASE URL', API_BASE_URL_CONST);
+    // console.log('API base URL 2', process.env)
     const endpoint = API_BASE_URL_CONST
     const headers: Headers = {
         'Accept': 'application/json',
@@ -29,9 +29,8 @@ export default async function fetchData(path: string, method: string, body?: obj
     })
       .then(async response => {
         if(!response.ok) {
-          console.log('Error on fetch, status code : '+response.status);
           const { message } = await response.json();
-          throw Error('Erreur : ' + message);
+          throw Error(message);
         }
         
         /*if (response.status === 401 || response.status === 403) {
@@ -42,7 +41,7 @@ export default async function fetchData(path: string, method: string, body?: obj
         return response.json();
       })
       .catch(error => {
-        console.log('Error on fetch, '+error.message)
-        throw Error('Error on fetch, '+error.message);
+        console.log('Error : ' + error.message)
+        throw Error('Error : ' + error.message);
       })
 }

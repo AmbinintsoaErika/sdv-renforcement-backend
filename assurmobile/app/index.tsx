@@ -1,62 +1,74 @@
-import { Button, Card, Text } from "react-native-paper";
+import { Button, Card, Text, Modal, Portal, TextInput } from "react-native-paper";
 import { ScrollView, StyleSheet } from "react-native";
 import { useContext, useEffect, useState } from 'react';
 import { Redirect, useRootNavigationState, useRouter } from 'expo-router';
 import { UserContext } from "@/contexts/UserContext";
 import fetchData from "@/hooks/fetchData";
 
-
 type SinistreType = {
-  id: number | string,
-  plate?: string,
-  sinister_datetime?: any,
-  context?: string
-}
+  id: number | string;
+  contrat_id?: string;
+  statut?: string;
+  dateAppel?: string;
+  dateSinistre?: string;
+  contexte?: string;
+  attestationAssurance?: number;
+  carteGrise?: number;
+  cin?: number;
+  file?: any;
+};
 
 export default function Index() {
-  const router = useRouter()
-  const [ sinistres, setSinistres ] = useState<SinistreType[]>();
+  const router = useRouter();
+  const [sinistres, setSinistres] = useState<SinistreType[]>([]);
+  const [loading, setLoading] = useState(false);
   const rootNavigationState = useRootNavigationState();
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    fetchData('/sinistres', 'GET', {}, true)
-      .then(data => {
-        const {sinistres} = data;
-        setSinistres(sinistres)
-        console.log('DATA LOADED ', data)
-      })
-  }, [])
+    loadSinistres();
+  }, []);
+
+  const loadSinistres = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchData('/sinistres', 'GET', {}, true);
+      setSinistres(data.sinistres);
+    } catch (err) {
+      console.error("Error loading sinistres:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!user) {
-    console.log('REDIRECT....', user)
-    return <Redirect href="/login" />
+    return <Redirect href="/login" />;
   }
 
-  if(rootNavigationState?.key) {
+  if (rootNavigationState?.key) {
     return (
       <ScrollView>
-        {sinistres?.map((sinistre: SinistreType) => (
-          <Card
-            key={sinistre.id}
-            style={styles.card}
-          >
-            <Card.Title title={"Sinistre n°"+sinistre.id} subtitle={sinistre.context} />
+        {sinistres.map((sinistre: SinistreType) => (
+          <Card key={sinistre.id} style={styles.card}>
+            <Card.Title title={`Sinistre n°${sinistre.id}`} />
             <Card.Content>
-              <Text variant="titleLarge">Véhicule : {sinistre.plate}</Text>
-              <Text variant="bodyMedium">Soumis le : {sinistre.sinister_datetime}</Text>
+              <Text variant="bodyMedium">Statut: {sinistre.statut}</Text>
+              <Text variant="bodyMedium">Date Appel: {sinistre.dateAppel}</Text>
+              <Text variant="bodyMedium">Contexte: {sinistre.contexte}</Text>
             </Card.Content>
             <Card.Actions>
               <Button
-                onPress={() => router.push({ pathname: '/sinistre/[id]', params: { id: sinistre.id }})}
+                onPress={() => {
+                  router.push({ pathname: '/sinistre/[id]', params: { id: sinistre.id } });
+                }}
               >
-                Accéder au sinistre
+                Voir
               </Button>
             </Card.Actions>
           </Card>
         ))}
       </ScrollView>
-    ); 
+    );
   }
 }
 
@@ -65,6 +77,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: "#dbcae2"
-  }
-})
+    backgroundColor: "#795c85",
+  },
+});

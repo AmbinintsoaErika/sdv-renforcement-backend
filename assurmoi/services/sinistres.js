@@ -20,71 +20,127 @@ const getSinistre = async (req, res) => {
 const createSinistre = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { contrat_id, dateSinistrePlanifiee, datePECPlanifiee, datePEC, dateDebutTravaux, dateFinTravaux, dateRestitutionPlanifiee, dateRestitutionEffective } = req.body
-        const existContrat = await Contrat.findOne({ id: contrat_id })
+        const {
+            contrat_id,
+            statut,
+            dateAppel,
+            dateSinistre,
+            contexte,
+            attestationAssurance,
+            carteGrise,
+            cin
+        } = req.body;
 
-        if(!existContrat) {
+        const existContrat = await Contrat.findOne({ where: { id: contrat_id } });
+        if (!existContrat) {
             transaction.rollback();
             return res.status(400).json({
                 message: 'Contrat not found'
-            })
+            });
+        }
+
+        const documentIds = [attestationAssurance, carteGrise, cin];
+        for (const docId of documentIds) {
+            if (docId) {
+                const existDocument = await Document.findOne({ where: { id: docId } });
+                if (!existDocument) {
+                    transaction.rollback();
+                    return res.status(400).json({
+                        message: `Document with ID ${docId} not found`
+                    });
+                }
+            }
         }
 
         const sinistre = await Sinistre.create({
             contrat_id,
-            dateSinistrePlanifiee,
-            datePECPlanifiee,
-            datePEC,
-            dateDebutTravaux,
-            dateFinTravaux,
-            dateRestitutionPlanifiee,
-            dateRestitutionEffective
-        }, { transaction })
+            statut,
+            dateAppel,
+            dateSinistre,
+            contexte,
+            attestationAssurance, 
+            carteGrise,
+            cin
+        }, { transaction });
+
+        transaction.commit();
         return res.status(201).json({
             sinistre
-        })
-    } catch(err) {
+        });
+    } catch (err) {
         transaction.rollback();
         return res.status(400).json({
-            message: 'Error on in creation',
+            message: 'Error on sinistre creation',
             stacktrace: err.errors
-        })
+        });
     }
-}
+};
 
 const updateSinistre = async (req, res) => {
     const transaction = await dbInstance.transaction();
     try {
-        const { contrat_id, dateSinistrePlanifiee, datePECPlanifiee, datePEC, dateDebutTravaux, dateFinTravaux, dateRestitutionPlanifiee, dateRestitutionEffective } = req.body
-        const sinistre_id = req.params.id
+        const {
+            contrat_id,
+            statut,
+            dateAppel,
+            dateSinistre,
+            contexte,
+            attestationAssurance,
+            carteGrise,
+            cin
+        } = req.body;
+        const sinistre_id = req.params.id;
+
+        if (contrat_id) {
+            const existContrat = await Contrat.findOne({ where: { id: contrat_id } });
+            if (!existContrat) {
+                transaction.rollback();
+                return res.status(400).json({
+                    message: 'Contrat not found'
+                });
+            }
+        }
+
+        const documentIds = [attestationAssurance, carteGrise, cin];
+        for (const docId of documentIds) {
+            if (docId) {
+                const existDocument = await Document.findOne({ where: { id: docId } });
+                if (!existDocument) {
+                    transaction.rollback();
+                    return res.status(400).json({
+                        message: `Document with ID ${docId} not found`
+                    });
+                }
+            }
+        }
 
         const sinistre = await Sinistre.update({
             contrat_id,
-            dateSinistrePlanifiee,
-            datePECPlanifiee,
-            datePEC,
-            dateDebutTravaux,
-            dateFinTravaux,
-            dateRestitutionPlanifiee,
-            dateRestitutionEffective
+            statut,
+            dateAppel,
+            dateSinistre,
+            contexte,
+            attestationAssurance,
+            carteGrise,
+            cin
         }, {
             where: { id: sinistre_id },
             transaction
-        })
+        });
 
         transaction.commit();
         return res.status(200).json({
-            message: "Successfuly updated",
+            message: "Successfully updated",
             sinistre
-        })
-    } catch(err) {
+        });
+    } catch (err) {
         transaction.rollback();
         return res.status(400).json({
             message: 'Error on sinistre update',
             stacktrace: err.errors
-        })
+        });
     }
-}
+};
 
 const deleteSinistre = async (req, res) => {
     const transaction = await dbInstance.transaction();
