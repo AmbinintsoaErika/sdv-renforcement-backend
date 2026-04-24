@@ -76,25 +76,19 @@ export default function SinistreDetails() {
   
     try {
       const formData = new FormData();
-      const fileToUpload = {
-        uri: file.uri,
-        name: file.name,
-        type: file.type,
-      } as any;
-
-      console.log("fileToUpload : " + JSON.stringify(fileToUpload));
-
       formData.append("chemin", file.uri);
       formData.append("titre", file.name);
       formData.append("type", documentType);
 
-      console.log("formData : " + JSON.stringify(formData));
-  
       const response = await fetchData("/documents", "POST", formData, true);
-  
+      if(!response.ok) { setError("Erreur lors de l'envoi du document."); return; }
+
+      console.log(JSON.stringify(response));
+      
       alert("Document envoyé avec succès !");
       setFile(null);
       setError(null);
+
       loadSinistre();
     } catch (err) {
       console.error("Error uploading file:", err);
